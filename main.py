@@ -37,6 +37,7 @@ def addStudent():
 
 # display student
 def readStudent():
+    os.chdir(os.getcwd())
     file = open(studentDatabase,'rb')
     while True:
         try:
