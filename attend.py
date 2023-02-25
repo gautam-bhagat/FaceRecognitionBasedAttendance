@@ -1,8 +1,23 @@
 import cv2
 import os
+from csv import writer
 import face_recognition
 import pickle
 import numpy as np
+from datetime import datetime
+
+presentId =[]
+
+def markAttendance(id,name,mail):
+    print(id)
+    if id not in presentId:
+        presentId.append(id)
+        print("Attendance Marked")
+        rec = [str(datetime.now()),id,name.get(id),mail.get(id)]
+        with open("Attendance.csv",'a') as f:
+             writer_obj = writer(f)
+             writer_obj.writerow(rec)
+             f.close()
 
 def takeAttendance():
     cap =  cv2.VideoCapture(0)
@@ -47,13 +62,13 @@ def takeAttendance():
                 distance = face_recognition.face_distance(encodings,encodeFace)
             #     print(matches)
             #     print(distance)
-                print(faceLoc)
                 matchIndex = np.argmin(distance)
                 if matches[matchIndex]:
                     id = ids[matchIndex]
                     y1, x2, y2, x1 = faceLoc
-                    print("Name : ",name[int(id)])
-                    print("Mail : ",mail[int(id)],end="\n")
+                    print("Name : ",name.get(int(id)))
+                    print("Mail : ",mail.get(int(id)),end="\n")
+                    markAttendance(int(id),name,mail)
                     cv2.rectangle(liveImage, (x1, y1), (x2, y2), (0, 255, 0), 2)
                     cv2.rectangle(liveImage, (x1, y2 ), (x2, y2), (0, 255, 0), cv2.FILLED)
                     cv2.putText(liveImage, id, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)

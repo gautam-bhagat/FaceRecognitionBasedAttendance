@@ -1,8 +1,4 @@
-import csv
 import os
-import cv2
-import pickle
-import face_recognition
 
 from attend import takeAttendance
 from crud import *
