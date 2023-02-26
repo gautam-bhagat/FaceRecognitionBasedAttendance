@@ -9,8 +9,7 @@ from datetime import datetime
 presentId =[]
 
 def markAttendance(id,name,mail):
-    print(id)
-    if id not in presentId:
+    
         presentId.append(id)
         print("Attendance Marked")
         rec = [str(datetime.now()),id,name.get(id),mail.get(id)]
@@ -21,6 +20,8 @@ def markAttendance(id,name,mail):
 
 def takeAttendance():
     cap =  cv2.VideoCapture(0)
+    print("Camera Opened")
+    print("Please Wait !!")
 
     encodedFile = open("EncodedFile.p",'rb+')
     encodedFilewithId = pickle.load(encodedFile)
@@ -31,6 +32,7 @@ def takeAttendance():
 
     os.chdir(os.getcwd())
     file = open("student.dat",'rb')
+    file.seek(0)
     name = {}
     mail = {}
 
@@ -42,10 +44,10 @@ def takeAttendance():
                     mail[r[0]] = r[2]
             except EOFError:
                 break
-            except:
-                print("Error")
+            except Exception as e:
+                print("Error : ", e)
     file.close()
-
+    print("You are good to go !!")
     while True:
         
             success , liveImage = cap.read()
@@ -66,13 +68,14 @@ def takeAttendance():
                 if matches[matchIndex]:
                     id = ids[matchIndex]
                     y1, x2, y2, x1 = faceLoc
-                    print("Name : ",name.get(int(id)))
+                    print("\nName : ",name.get(int(id)))
                     print("Mail : ",mail.get(int(id)),end="\n")
-                    markAttendance(int(id),name,mail)
+                    if int(id) not in presentId:
+                        markAttendance(int(id),name,mail)
                     cv2.rectangle(liveImage, (x1, y1), (x2, y2), (0, 255, 0), 2)
                     cv2.rectangle(liveImage, (x1, y2 ), (x2, y2), (0, 255, 0), cv2.FILLED)
-                    cv2.putText(liveImage, id, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
-                    cv2.putText(liveImage, name.get(int(id)), ( 20,20), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
+                    cv2.putText(liveImage, name.get(int(id)), (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
+                    
                 
             cv2.imshow("Attendance", liveImage)
             if not success:
@@ -83,10 +86,11 @@ def takeAttendance():
             if cv2.getWindowProperty("Attendance", cv2.WND_PROP_VISIBLE) <1:
                 break
 
-            if k%256 == 27:
-                 break
-            elif k%256 == 32:
-                pass
+            # ----throwing run time error---
+            # if k%256 == 27:
+            #      break
+            # elif k%256 == 32:
+            #     pass
         
 # if __name__ == "__main__":
 #     takeAttendance()

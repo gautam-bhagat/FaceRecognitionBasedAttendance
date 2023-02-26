@@ -1,6 +1,10 @@
 import csv
+from tabulate import tabulate
 import os
+from pandas import *
 import cv2
+import pandas as pd
+import numpy as np
 import pickle
 
 studentDatabase = "student.dat"
@@ -8,6 +12,7 @@ studentDatabase = "student.dat"
 def addStudent():
     record =[]
     file = open(studentDatabase,'ab+')
+    file.seek(0)
     mainD = os.getcwd()
     while True:
         # Getting Details
@@ -37,22 +42,27 @@ def addStudent():
 # display student
 def readStudent():
     os.chdir(os.getcwd())
-    file = open(studentDatabase,'rb')
+    objects = []
+    openfile = open(studentDatabase,'rb')
+    openfile.seek(0)
     while True:
         try:
-            records = pickle.load(file)
-            for r in records:
-                print(r)
+          
+          for i in pickle.load(openfile):
+            r = []
+            r.append(i[0])
+            r.append(i[1])
+            r.append(i[2])
+            objects.append(r)
         except EOFError:
-            break
-        except:
-            print("Error")
-    
-    file.close()
+                break
+    openfile.close()
+    print("\n",tabulate(objects,headers=["Roll","Name","Mail"]))
 
 # update student detials
 def updateStudent():
     file = open(studentDatabase,'rb+')
+    file.seek(0)
     records = pickle.load(file)
     roll = int(input("Enter Roll Number to be updated : "))
     found = 0
@@ -80,6 +90,7 @@ def updateStudent():
 def deleteStudent():
     file = open(studentDatabase,'rb')
     # loading all data
+    file.seek(0)
     records = pickle.load(file)
     file.close()
     roll = int(input("Enter Roll Number to be deleted : "))

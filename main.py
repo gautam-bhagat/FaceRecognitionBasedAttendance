@@ -8,11 +8,12 @@ from encode_images import trainSystem
 def main():
     # path for images of students
     path = "images"
+    
     # Check whether the specified path exists or not
     isExist = os.path.exists(path)
     if not isExist:
 
-    # Create a new directory because it does not exist
+        # Create a new directory because it does not exist
         os.makedirs(path)
 
     isRunning = True
@@ -23,6 +24,7 @@ def main():
             addStudent()
         elif choice ==2 :
             readStudent()
+            # pass
         elif choice == 3 :
             updateStudent()
         elif choice == 4 :
