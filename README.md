@@ -32,3 +32,13 @@ All above allows CRUD operations of student
 ```
 <code>Train the System</code> : Finds Encoding of face using the library and is dumped using pickle<br>
 <code>Take Attendance</code> : Captures live image and using encodings it recognises the face.
+
+## Output
+<img src="output/output1.png" />
+
+<b>Detected Face</b>
+<img src="output/harry output.png" />
+<img src="output/honeyputput.png" />
+
+<b>Attendance CSV</b>
+<img src="output/output2.png" />
